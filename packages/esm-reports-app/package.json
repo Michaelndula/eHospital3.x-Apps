@@ -1,6 +1,6 @@
 {
   "name": "@sjthc/esm-reports-app",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MPL-2.0",
   "description": "Reports Admin page for OpenMRS",
   "browser": "dist/sjthc-esm-reports-app.js",
@@ -8,14 +8,23 @@
   "source": true,
   "scripts": {
     "start": "openmrs develop",
-    "serve": "webpack serve --mode=development",
-    "build": "webpack --mode production",
     "analyze": "webpack --mode=production --env.analyze=true",
-    "lint": "eslint src --ext js,jsx,ts,tsx",
+    "build": "webpack --mode production",
+    "ci:prepublish": "lerna publish from-package --no-git-reset --yes --dist-tag next",
+    "ci:publish": "lerna publish from-package --yes --no-git-reset --yes",
+    "coverage": "yarn test --coverage",
+    "debug": "npm run serve",
+    "extract-translations": "i18next 'src/**/*.component.tsx' 'src/index.ts' i18next-parser.config.js",
+    "lint": "eslint src --ext ts,tsx --max-warnings=0",
+    "postinstall": "husky install",
+    "prettier": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx,css,scss}\" \"e2e/**/*.ts\"",
+    "release": "lerna version --no-git-tag-version",
+    "serve": "webpack serve --mode=development",
+    "test-e2e": "playwright test",
+    "test": "cross-env TZ=UTC jest --config jest.config.js --verbose false --passWithNoTests",
+    "test:watch": "cross-env TZ=UTC jest --watch --config jest.config.js",
     "typescript": "tsc",
-    "test": "cross-env TZ=UTC jest --config jest.config.js --verbose false --passWithNoTests --color",
-    "test:watch": "cross-env TZ=UTC jest --watch --config jest.config.js --color",
-    "extract-translations": "i18next 'src/**/*.component.tsx' --config ../../tools/i18next-parser.config.js"
+    "verify": "turbo lint && turbo typescript && turbo test --color --concurrency=5"
   },
   "browserslist": [
     "extends browserslist-config-openmrs"
